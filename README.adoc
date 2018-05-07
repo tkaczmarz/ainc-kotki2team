@@ -30,7 +30,7 @@ Do pobrania naszego dockera wystarczy wpisać `docker run -it -d nosqldaria/ubun
 Kolejnym krokiem jest sprawdzanie _containerID_ pobranego dockera za pomocą komendy `docker ps -a`.
 A później wystarczy wpisać `docker exec -it _containerID_ bash`, co spowoduje uruchomienie dockera. 
 
-=== Uruchomienie projektu
+=== Uruchomienie skryptów
 
 Do uruchomiania wszystkich agregacji został napisany link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/nosql.sh[plik] w _bashu_, który pozwolił zautomatyzować cały proces: od wysyłania zapytań do bazy do wizualizacji otrzymanych wyników dla każdego z zapytań. 
 Więc, żeby uruchomić wszystkie zapytania i na wyjściu otrzymać wyniki w formacie mapek oraz wykresów, wystarczy wpisać komendę `bash nosql_projekt/nosql.sh`.
