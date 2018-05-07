@@ -2,7 +2,8 @@
 
 == Autorzy: Daria Kotowicz i Karol Daniluk
 
-W projekcie była użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , która reprezentuje loty krajowe w USA w latach 1990-2009. 
+=== Baza
+W projekcie została użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , która reprezentuje loty krajowe w USA w latach 1990-2009. 
 {nbsp} +
 Baza składa się z 15 kolumn i zawiera 3606803 rekordów, ale do testów została zmniejszona do 1000 rekordów.
  
@@ -14,18 +15,20 @@ Baza składa się z 15 kolumn i zawiera 3606803 rekordów, ale do testów zosta�
 |===
 
 === Tworzenie środowiska deweloperskiego na potrzeby projekta
-Do tworzenia projekta użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. Docker pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wczeniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
+Do tworzenia projektu użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. _Docker_ pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wcześniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
 
 Do realizacji projektu był potrzebny system operacyjny Linux, baza link:https://www.mongodb.com[mongoDB] i do wizualizacji wyników  interpretowany język programowania link:https://www.r-project.org[R]. 
-Na początek był pobrany docker Ubuntu za pomocą komendy docker run ubuntu, co automatycznie spowodowało pobranie najnowaszej wersji Ubuntu 18.04. Ale, niestety, to spowodowało problem w przyszłości gdy chcieliśmy zainstalować R. Więc pobraliśmy ubuntu ze wskazaniem wersji: docker run ubuntu:16.04. 
+
+Na początek był pobrany docker _Ubuntu_ za pomocą komendy `docker run ubuntu`, co automatycznie spowodowało pobranie najnowszej wersji Ubuntu 18.04. Ale, niestety, to spowodowało problem w przyszłości pod czas instalacji R. Więc pobraliśmy Ubuntu ze wskazaniem wersji: `docker run ubuntu:16.04`. 
+
 Później bez problemu udało się zainstalować w naszym dockerze mongoDB oraz R. 
 Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które będą opisane dalej. 
 
-=== Uruchomianie stworzonego dockera
+=== Uruchomienie stworzonego dockera
 
-Do pobrania naszego docker wystarczy wpisać docker run -it -d nosqldaria/ubuntu:16.04.
-Kolejnym krokiem jest sprawdzanie containerID pobranego dockera za pomocą komendy docker ps -a
-A później wystarczy wpisać docker exec -it containerID bash, co spowoduje uruchomienie dockera. 
+Do pobrania naszego dockera wystarczy wpisać `docker run -it -d nosqldaria/ubuntu:16.04`.
+Kolejnym krokiem jest sprawdzanie _containerID_ pobranego dockera za pomocą komendy `docker ps -a`.
+A później wystarczy wpisać `docker exec -it _containerID_ bash`, co spowoduje uruchomienie dockera. 
 
 === Uruchomienie projektu
 
@@ -34,20 +37,83 @@ Więc, żeby uruchomić wszystkie zapytania i i na wyjściu otrzymać wyniki w f
 
 === Zapytania do bazy
 
-Do tworzenia statystyk były potrzebne agregacje, które korzystają z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
+Do tworzenia statystyk były potrzebne agregacji, które korzystają z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
 
-Ponieżej jest przykładowe zapytanie, wykorzystujące Aggregation Pipeline:
-ZAPYTANIE
+Ponieżej jest przykładowe zapytanie, wykorzystujące _Aggregation Pipeline_:
 
-oraz Map-Reduce:
-ZAPYTANIE. 
+[source,js]
+----
+db.airport.aggregate(
+    [{
+            $match: {
+                Origin_airport: "ATL"
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Year: {
+                        $substr: ["$Fly_date", 0, 4]
+                    }
+                },
+                sumPassengers: {
+                    $sum: "$Passengers"
+                }
+            }
+        },
+        {
+            $sort: {
+                sumPassengers: -1
+            }
+        },
+        {
+            $limit: 50
+        }
+    ]
+)
+----
 
-Wszystkie wyniki zapytań były zapisane w plikach z rozszerzeniem json. 
+
+oraz _Map-Reduce_:
+
+[source,js]
+----
+var mapFunction1 = function() {
+    emit(this.Origin_airport, this.Flights);
+};
+var reduceFunction1 = function(keyCustId, valuesPrices) {
+    return Array.sum(valuesPrices);
+};
+db.airport.mapReduce(
+    mapFunction1,
+    reduceFunction1, {
+        out: "Origin_airport_Flight"
+    }
+);
+ 
+db.Origin_airport_Flight.find().sort({
+    value: -1
+}).limit(50)
+----
+
+Wszystkie wyniki zapytań były zapisane do plików z rozszerzeniem _json_. 
+
+Lista wysyłanych zapytań znajduje się w pliku link:[zapytaniaMongoDB.json]
 
 === Wizualizacja wyników zapytań
 
-Do wizualizacji wyników został użyty interpretowany język programowania R, który pozwala szybko i przede wszystkiem ładnie wyświetlić otrzymane wyniki. Ale mając wyniki w plikach z rozszerzeniem json nie udało się bez problemu je wczytać. Więc, najpierw zostały usunięte wszystkie charakterne znaki dla plików json i zapisane jako csv. 
-Do naniesienia wyników na mapki zostąły zainstalowane trzy dodatkowe biblioteki: ggplot2, ggmap i shadowtext. 
+Do wizualizacji wyników został użyty interpretowany język programowania _R_, który pozwala szybko i przede wszystkiem ładnie wyświetlić otrzymane wyniki. Ale mając wyniki w plikach z rozszerzeniem json nie udało się bez problemu je wczytać. Więc, najpierw zostały usunięte wszystkie charakterestyczne znaki dla plików _json_ i zapisane jako _csv_. 
+
+Do naniesienia wyników na mapki zostały zainstalowane trzy dodatkowe biblioteki: link:http://ggplot2.org[ggplot2], link:https://cran.r-project.org/web/packages/ggmap/index.html[ggmap] oraz link:https://cran.r-project.org/web/packages/shadowtext/index.html[shadowtext].
+
+=== Wyniki zapytań do bazy
+
+Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników. Ale bez problemu udało się pobrać wygenerowany plik z wynikami z dockera za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
+
+
+
+
 
  
 
