@@ -1,5 +1,5 @@
 use Airport_db
-DBQuery.shellBatchSize = 300
+DBQuery.shellBatchSize = 500
 db.airport.aggregate([{
         $group: {
             _id: "$Origin_airport",
@@ -19,8 +19,6 @@ db.airport.aggregate([{
 ])
 
 
-use Airport_db
-DBQuery.shellBatchSize = 300
 var mapFunction1 = function() {
     emit(this.Origin_airport, this.Flights);
 };
@@ -39,8 +37,6 @@ db.Origin_airport_Flight.find().sort({
 }).limit(50)
 
 
-use Airport_db
-DBQuery.shellBatchSize = 300
 db.airport.aggregate(
     [{
             $match: {
@@ -72,8 +68,6 @@ db.airport.aggregate(
 )
 
 
-use Airport_db
-DBQuery.shellBatchSize = 300
 db.airport.aggregate(
     [{
             $match: {
@@ -105,8 +99,6 @@ db.airport.aggregate(
 )
 
 
-use Airport_db
-DBQuery.shellBatchSize = 1000000
 db.airport.aggregate(
     [{
         $group: {
@@ -120,8 +112,6 @@ db.airport.aggregate(
 )
 
 
-use Airport_db
-DBQuery.shellBatchSize = 100000
 db.airport.aggregate(
     [{
             $group: {
@@ -145,5 +135,3 @@ db.airport.aggregate(
         }
     ]
 )
-
-
