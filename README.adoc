@@ -1,0 +1,58 @@
+= Projekt na egzamin
+
+== Autorzy: Daria Kotowicz i Karol Daniluk
+
+W projekcie była użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , która reprezentuje loty krajowe w USA w latach 1990-2009. 
+{nbsp} +
+Baza składa się z 15 kolumn i zawiera 3606803 rekordów, ale do testów została zmniejszona do 1000 rekordów.
+ 
+[%autowidth.spread,cols='1,1,2,2,1,1,1,1,1,1,1,1,1,1,1', options='header']
+.Przykładowy rekord z bazy
+|===
+|Origin_airport |Destination_airport	|Origin_city	|Destination_city	|Passengers	|Seats	|Flights	|Distance	|Fly_date	|Origin_population	|Destination_population	|Org_airport_lat	|Org_airport_long	|Dest_airport_lat	|Dest_airport_long
+|EUG	|RDM	|Eugene OR|	Bend OR	|41	|396	|22	|103	|1990-11-01	|284093	|76034	|44.1245994567871	|-123.21199798584	|44.2541008|-121.1500015
+|===
+
+=== Tworzenie środowiska deweloperskiego na potrzeby projekta
+Do tworzenia projekta użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. Docker pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wczeniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
+
+Do realizacji projektu był potrzebny system operacyjny Linux, baza link:https://www.mongodb.com[mongoDB] i do wizualizacji wyników  interpretowany język programowania link:https://www.r-project.org[R]. 
+Na początek był pobrany docker Ubuntu za pomocą komendy docker run ubuntu, co automatycznie spowodowało pobranie najnowaszej wersji Ubuntu 18.04. Ale, niestety, to spowodowało problem w przyszłości gdy chcieliśmy zainstalować R. Więc pobraliśmy ubuntu ze wskazaniem wersji: docker run ubuntu:16.04. 
+Później bez problemu udało się zainstalować w naszym dockerze mongoDB oraz R. 
+Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które będą opisane dalej. 
+
+=== Uruchomianie stworzonego dockera
+
+Do pobrania naszego docker wystarczy wpisać docker run -it -d nosqldaria/ubuntu:16.04.
+Kolejnym krokiem jest sprawdzanie containerID pobranego dockera za pomocą komendy docker ps -a
+A później wystarczy wpisać docker exec -it containerID bash, co spowoduje uruchomienie dockera. 
+
+=== Uruchomienie projektu
+
+Do uruchomiania wszystkich agregacji został napisany plik w bashu który pozwolił zautomatyzować cały proces: od wysyłania zapytań do bazy do wizualizacji otrzymanych wyników dla każdego z zapytań. 
+Więc, żeby uruchomić wszystkie zapytania i i na wyjściu otrzymać wyniki w formacie mapek oraz wykresów, wystarczy wpisać komendę bash nosql_projekt/nosql.sh.
+
+=== Zapytania do bazy
+
+Do tworzenia statystyk były potrzebne agregacje, które korzystają z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
+
+Ponieżej jest przykładowe zapytanie, wykorzystujące Aggregation Pipeline:
+ZAPYTANIE
+
+oraz Map-Reduce:
+ZAPYTANIE. 
+
+Wszystkie wyniki zapytań były zapisane w plikach z rozszerzeniem json. 
+
+=== Wizualizacja wyników zapytań
+
+Do wizualizacji wyników został użyty interpretowany język programowania R, który pozwala szybko i przede wszystkiem ładnie wyświetlić otrzymane wyniki. Ale mając wyniki w plikach z rozszerzeniem json nie udało się bez problemu je wczytać. Więc, najpierw zostały usunięte wszystkie charakterne znaki dla plików json i zapisane jako csv. 
+Do naniesienia wyników na mapki zostąły zainstalowane trzy dodatkowe biblioteki: ggplot2, ggmap i shadowtext. 
+
+ 
+
+
+
+
+
+
