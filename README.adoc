@@ -32,8 +32,8 @@ A później wystarczy wpisać `docker exec -it _containerID_ bash`, co spowoduje
 
 === Uruchomienie projektu
 
-Do uruchomiania wszystkich agregacji został napisany plik w bashu który pozwolił zautomatyzować cały proces: od wysyłania zapytań do bazy do wizualizacji otrzymanych wyników dla każdego z zapytań. 
-Więc, żeby uruchomić wszystkie zapytania i i na wyjściu otrzymać wyniki w formacie mapek oraz wykresów, wystarczy wpisać komendę bash nosql_projekt/nosql.sh.
+Do uruchomiania wszystkich agregacji został napisany link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/nosql.sh[plik] w _bashu_, który pozwolił zautomatyzować cały proces: od wysyłania zapytań do bazy do wizualizacji otrzymanych wyników dla każdego z zapytań. 
+Więc, żeby uruchomić wszystkie zapytania i na wyjściu otrzymać wyniki w formacie mapek oraz wykresów, wystarczy wpisać komendę `bash nosql_projekt/nosql.sh`.
 
 === Zapytania do bazy
 
@@ -99,7 +99,7 @@ db.Origin_airport_Flight.find().sort({
 
 Wszystkie wyniki zapytań były zapisane do plików z rozszerzeniem _json_. 
 
-Lista wysyłanych zapytań znajduje się w pliku link:[zapytaniaMongoDB.json]
+Lista wysyłanych zapytań znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytaniaMongoDB.json[zapytaniaMongoDB.json]
 
 === Wizualizacja wyników zapytań
 
@@ -107,11 +107,13 @@ Do wizualizacji wyników został użyty interpretowany język programowania _R_,
 
 Do naniesienia wyników na mapki zostały zainstalowane trzy dodatkowe biblioteki: link:http://ggplot2.org[ggplot2], link:https://cran.r-project.org/web/packages/ggmap/index.html[ggmap] oraz link:https://cran.r-project.org/web/packages/shadowtext/index.html[shadowtext].
 
+Skrypt napisany w R znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytania.R[zapytania.R]
+
 === Wyniki zapytań do bazy
 
 Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników. Ale bez problemu udało się pobrać wygenerowany plik z wynikami z dockera za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
 
-
+GRAFIKI
 
 
 
