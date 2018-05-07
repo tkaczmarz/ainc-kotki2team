@@ -1,0 +1,149 @@
+use Airport_db
+DBQuery.shellBatchSize = 300
+db.airport.aggregate([{
+        $group: {
+            _id: "$Origin_airport",
+            sumPassengers: {
+                $sum: "$Passengers"
+            }
+        }
+    },
+    {
+        $sort: {
+            sumPassengers: -1
+        }
+    },
+    {
+        $limit: 50
+    }
+])
+
+
+use Airport_db
+DBQuery.shellBatchSize = 300
+var mapFunction1 = function() {
+    emit(this.Origin_airport, this.Flights);
+};
+var reduceFunction1 = function(keyCustId, valuesPrices) {
+    return Array.sum(valuesPrices);
+};
+db.airport.mapReduce(
+    mapFunction1,
+    reduceFunction1, {
+        out: "Origin_airport_Flight"
+    }
+);
+
+db.Origin_airport_Flight.find().sort({
+    value: -1
+}).limit(50)
+
+
+use Airport_db
+DBQuery.shellBatchSize = 300
+db.airport.aggregate(
+    [{
+            $match: {
+                Origin_airport: "ATL"
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Year: {
+                        $substr: ["$Fly_date", 0, 4]
+                    }
+                },
+                sumPassengers: {
+                    $sum: "$Passengers"
+                }
+            }
+        },
+        {
+            $sort: {
+                sumPassengers: -1
+            }
+        },
+        {
+            $limit: 50
+        }
+    ]
+)
+
+
+use Airport_db
+DBQuery.shellBatchSize = 300
+db.airport.aggregate(
+    [{
+            $match: {
+                Origin_airport: "ATL"
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Year: {
+                        $substr: ["$Fly_date", 0, 4]
+                    }
+                },
+                sumFlights: {
+                    $sum: "$Flights"
+                }
+            }
+        },
+        {
+            $sort: {
+                sumFlights: -1
+            }
+        },
+        {
+            $limit: 50
+        }
+    ]
+)
+
+
+use Airport_db
+DBQuery.shellBatchSize = 1000000
+db.airport.aggregate(
+    [{
+        $group: {
+            _id: {
+                Origin_airport: "$Origin_airport",
+                Org_airport_lat: "$Org_airport_lat",
+                Org_airport_long: "$Org_airport_long"
+            },
+        }
+    }]
+)
+
+
+use Airport_db
+DBQuery.shellBatchSize = 100000
+db.airport.aggregate(
+    [{
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Destination_airport: "$Destination_airport",
+                    Org_airport_lat: "$Org_airport_lat",
+                    Org_airport_long: "$Org_airport_long",
+                    Dest_airport_lat: "$Dest_airport_lat",
+                    Dest_airport_long: "$Dest_airport_long"
+                },
+                sumFlights: {
+                    $sum: "$Flights"
+                }
+            }
+        },
+        {
+            $sort: {
+                sumFlights: -1
+            }
+        }
+    ]
+)
+
+
