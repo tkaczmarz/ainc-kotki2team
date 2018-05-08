@@ -1,11 +1,9 @@
-= Projekt na egzamin
+= Projekt na egzamin - Daria Kotowicz i Karol Daniluk
 
-== Autorzy: Daria Kotowicz i Karol Daniluk
-
-=== Baza
-W projekcie została użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , która reprezentuje loty krajowe w USA w latach 1990-2009. 
+== Baza
+W projekcie została użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , zawierająca zestawienie lotów krajowych w USA, w latach 1990-2009. 
 {nbsp} +
-Baza składa się z 15 kolumn i zawiera 3606803 rekordów, ale do testów została zmniejszona do 1000 rekordów.
+Baza składa się z 15 kolumn i 3606803 rekordów, jednak do testów została zmniejszona do 1000 rekordów.
  
 [%autowidth.spread,cols='1,1,2,2,1,1,1,1,1,1,1,1,1,1,1', options='header']
 .Przykładowy rekord z bazy
@@ -14,32 +12,33 @@ Baza składa się z 15 kolumn i zawiera 3606803 rekordów, ale do testów zosta�
 |EUG	|RDM	|Eugene OR|	Bend OR	|41	|396	|22	|103	|1990-11-01	|284093	|76034	|44.1245994567871	|-123.21199798584	|44.2541008|-121.1500015
 |===
 
-=== Tworzenie środowiska deweloperskiego na potrzeby projekta
-Do tworzenia projektu użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. _Docker_ pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wcześniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
+== Tworzenie środowiska deweloperskiego na potrzeby projektu
+Do stworzenia projektu użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. _Docker_ pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wcześniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
 
-Do realizacji projektu był potrzebny system operacyjny Linux, baza link:https://www.mongodb.com[mongoDB] i do wizualizacji wyników  interpretowany język programowania link:https://www.r-project.org[R]. 
+Do realizacji projektu potrzebny był system operacyjny Linux, baza link:https://www.mongodb.com[mongoDB] oraz interpretowany język programowania link:https://www.r-project.org[R] do wizualizacji wyników. 
 
-Na początek był pobrany docker _Ubuntu_ za pomocą komendy `docker run ubuntu`, co automatycznie spowodowało pobranie najnowszej wersji Ubuntu 18.04. Ale, niestety, to spowodowało problem w przyszłości pod czas instalacji R. Więc pobraliśmy Ubuntu ze wskazaniem wersji: `docker run ubuntu:16.04`. 
+Na początek został pobrany docker _Ubuntu_ za pomocą komendy `docker run ubuntu`, co automatycznie spowodowało pobranie najnowszej wersji Ubuntu 18.04. Niestety spowodowało to problem podczas instalacji pakietu R. Pobraliśmy więc Ubuntu ze wskazaniem wersji: `docker run ubuntu:16.04`. 
 
-Później bez problemu udało się zainstalować w naszym dockerze mongoDB oraz R. 
-Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które będą opisane dalej. 
+Następnie bez problemu udało się zainstalować w naszym dockerze mongoDB oraz R. 
+Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które są opisane poniżej. 
 
 === Uruchomienie stworzonego dockera
 
 Do pobrania naszego dockera wystarczy wpisać `docker run -it -d nosqldaria/ubuntu:16.04`.
-Kolejnym krokiem jest sprawdzanie _containerID_ pobranego dockera za pomocą komendy `docker ps -a`.
-A później wystarczy wpisać `docker exec -it _containerID_ bash`, co spowoduje uruchomienie dockera. 
+Kolejnym krokiem jest sprawdzanie _containerID_ pobranego dockera za pomocą komendy `docker ps -a`. Następnie wystarczy jedynie wpisać `docker exec -it _containerID_ bash`, co spowoduje uruchomienie dockera. 
 
-=== Uruchomienie skryptów
+== Tworzenie skryptów
 
-Do uruchomiania wszystkich agregacji został napisany link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/nosql.sh[plik] w _bashu_, który pozwolił zautomatyzować cały proces: od wysyłania zapytań do bazy do wizualizacji otrzymanych wyników dla każdego z zapytań. 
-Więc, żeby uruchomić wszystkie zapytania i na wyjściu otrzymać wyniki w formacie mapek oraz wykresów, wystarczy wpisać komendę `bash nosql_projekt/nosql.sh`.
+Do uruchomiania wszystkich zapytań został napisany link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/nosql.sh[plik] w _bashu_, który pozwolił zautomatyzować cały proces: wysyłanie zapytań do bazy wraz wizualizacją otrzymanych wyników dla każdego z zapytań. 
+Żeby uruchomić wszystkie zapytania i na wyjściu otrzymać wyniki w postaci map oraz wykresów, wystarczy wpisać komendę `bash nosql_projekt/nosql.sh`.
 
-=== Zapytania do bazy
+== Zapytania do bazy
 
-Do tworzenia statystyk były potrzebne agregacji, które korzystają z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
+Do tworzenia statystyk wymagane były zapytania, korzystające z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
 
-Ponieżej jest przykładowe zapytanie, wykorzystujące _Aggregation Pipeline_:
+=== Aggregation Pipeline
+
+Przykładowe zapytanie, wykorzystujące _Aggregation Pipeline_
 
 [source,js]
 ----
@@ -74,8 +73,9 @@ db.airport.aggregate(
 )
 ----
 
+=== Map-Reduce
 
-oraz _Map-Reduce_:
+Przykładowe zapytanie, wykorzystujące _Map-Reduce_
 
 [source,js]
 ----
@@ -97,30 +97,54 @@ db.Origin_airport_Flight.find().sort({
 }).limit(50)
 ----
 
-Wszystkie wyniki zapytań były zapisane do plików z rozszerzeniem _json_. 
+Wszystkie wyniki zapytań zostały zapisane do plików z rozszerzeniem _json_. 
 
 Lista wysyłanych zapytań znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytaniaMongoDB.json[zapytaniaMongoDB.json]
 
-=== Wizualizacja wyników zapytań
+== Wizualizacja wyników zapytań
 
-Do wizualizacji wyników został użyty interpretowany język programowania _R_, który pozwala szybko i przede wszystkiem ładnie wyświetlić otrzymane wyniki. Ale mając wyniki w plikach z rozszerzeniem json nie udało się bez problemu je wczytać. Więc, najpierw zostały usunięte wszystkie charakterestyczne znaki dla plików _json_ i zapisane jako _csv_. 
+Do wizualizacji wyników został użyty język _R_ który przy użyciu biblioteki link:http://ggplot2.org[ggplot2] pozwala szybko i w łatwy sposób przedstawić informacje w sposób graficzny - w postaci wykresów, punktów, grafów i diagramów. Jednak przed załadowaniem wyników zapytań wymagane było usunięcie z nich wszystkich charakterystycznych znaków dla plików _json_ oraz zapisanie ich do plików _csv_.
 
-Do naniesienia wyników na mapki zostały zainstalowane trzy dodatkowe biblioteki: link:http://ggplot2.org[ggplot2], link:https://cran.r-project.org/web/packages/ggmap/index.html[ggmap] oraz link:https://cran.r-project.org/web/packages/shadowtext/index.html[shadowtext].
+Do naniesienia wyników na mapę została dodatkowo wykorzystana biblioteka link:https://cran.r-project.org/web/packages/ggmap/index.html[ggmap], dzięki której została pobrana polityczna mapa świata oraz mapa stanów USA. Następnie przy użyciu _ggplot2_ zostały naniesione na nie wyniki w postaci punktowej oraz z użyciem link:https://cran.r-project.org/web/packages/shadowtext/index.html[shadowtext]  cieniowane etykiety tekstowe w celu zwiększenia czytelności.
 
 Skrypt napisany w R znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytania.R[zapytania.R]
 
 === Wyniki zapytań do bazy
 
-Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników. Ale bez problemu udało się pobrać wygenerowany plik z wynikami z dockera za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
+Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników, jendak bez problemu udało się pobrać wygenerowany plik z wynikami z dockera za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
 
-GRAFIKI
+=== Otrzymane wyniki
 
+* 50 Najbardziej popularnych lotnisk - według liczby pasażerów
 
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot1.png[Top 50 by passengers]
+{nbsp} +
 
+* 50 Najbardziej popularnych lotnisk - według liczby lotów
+
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot2.png[Top 50 by flights]
+{nbsp} +
+
+* Lotnisko w Atlancie - liczba pasażerów wedlug lat
+
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot3.png[Passengers by years]
+{nbsp} +
+ 
+* Lotnisko w Atlancie - liczba lotów wedlug lat
+
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot4.png[Flights by years]
+{nbsp} +
  
 
+* Mapa amerykańskich lotnisk cywilnych
 
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot5.png[Airports Map]
+{nbsp} +
+ 
+* 20 najbardziej popularnych kursów - po sumie lotów w obu kierunkach
 
-
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/plot6.png[Top 20 Routes]
+{nbsp} +
+ 
 
 
