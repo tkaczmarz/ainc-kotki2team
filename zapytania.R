@@ -72,10 +72,13 @@ data = data.frame(read.table(plik))[c(5,7)]
 # rename columns
 colnames(data) = c('ID', 'Sum')
 
-# sort factor cities by frequency
-data$ID = factor(data$ID, levels = data$ID[order(data$Sum, decreasing = T)])
+# sort by years
+data[1] = as.character(data$ID)
 
-png('images/plot3.png',width=800,height=600) 
+# sort from highest to lowest sum
+#data$ID = factor(data$ID, levels = data$ID[order(data$Sum, decreasing = T)])
+
+png('images/plot3.png',width=800,height=600)
 # barplot
 ggplot(data=data, aes(x=ID, y=Sum)) +
   geom_bar(stat="identity", fill='steelblue') +
@@ -87,6 +90,7 @@ ggplot(data=data, aes(x=ID, y=Sum)) +
     plot.subtitle = element_text(size=15)) +
   scale_y_continuous(expand = c(0,0)) + 
   ggtitle(tytul, subtitle = podtytul)
+
 dev.off()
 
 ## ZAPYTANIE 4
@@ -102,10 +106,13 @@ data = data.frame(read.table(plik))[c(5,7)]
 # rename columns
 colnames(data) = c('ID', 'Sum')
 
-# sort factor cities by frequency
-data$ID = factor(data$ID, levels = data$ID[order(data$Sum, decreasing = T)])
+# sort by years
+data[1] = as.character(data$ID)
 
-png('images/plot4.png',width=800,height=600) 
+# sort from highest to lowest sum
+#data$ID = factor(data$ID, levels = data$ID[order(data$Sum, decreasing = T)])
+
+png('images/plot4.png',width=800,height=600)
 # barplot
 ggplot(data=data, aes(x=ID, y=Sum)) +
   geom_bar(stat="identity", fill='steelblue') +
