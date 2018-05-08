@@ -64,7 +64,7 @@ db.airport.aggregate(
         },
         {
             $sort: {
-                sumPassengers: -1
+                Year: 1
             }
         },
         {
