@@ -108,12 +108,14 @@ db.Origin_airport_Flight.find().sort({
 
 === Czas działania
 
-Do porównania dwóch metod został zmierzony czas działania dla zapytania 1
+Na cele projektu został zmierzony czas działania skryptów, zarówno w trybie lokalnym jak i w dockerze.
+
+Do porównania dwóch metod został zmierzony czas działania dla zapytania 1:
 
 image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/time1.png[Pipeline vs Map-reduce]
 {nbsp} +
 
-Dodatkowo został zmierzony czas działania metody _Pipeline_ z wykorzystaniem indeksowania oraz bez niego
+Dodatkowo został zmierzony czas działania metody _Pipeline_ z wykorzystaniem indeksowania oraz bez niego:
 
 image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/time2.png[Index vs No-index]
 {nbsp} +
