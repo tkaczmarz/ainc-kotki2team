@@ -1,5 +1,6 @@
 use Airport_db
 db.time.drop()
+// 1 zapytanie
 var before = new Date()
 db.airport.aggregate([{
         $group: {
@@ -14,14 +15,13 @@ db.airport.aggregate([{
         $out: "Origin_airport_sumPassengers"
     }
 ]);
-
-
 var after = new Date()
 execution_mills1 = after - before
 db.time.save({
     "number": execution_mills1
 });
 
+// 2 zapytanie
 var before = new Date()
 var mapFunction1 = function() {
     emit(this.Origin_airport, this.Flights);
@@ -41,8 +41,7 @@ db.time.save({
     "number": execution_mills2
 });
 
-
-
+// 3 zapytanie
 var before = new Date()
 db.airport.aggregate(
     [{
@@ -76,15 +75,13 @@ db.airport.aggregate(
         }
     ]
 )
-
-
-
 var after = new Date()
 execution_mills3 = after - before
 db.time.save({
     "number": execution_mills3
 });
 
+// 3a zapytanie (z indexem)
 db.airport.createIndex({
     "Origin_airport": 1
 })
@@ -130,7 +127,7 @@ db.airport.dropIndex({
     "Origin_airport": 1
 })
 
-
+// 4 zapytanie 
 db.airport.aggregate(
     [{
             $match: {
@@ -164,8 +161,23 @@ db.airport.aggregate(
     ]
 )
 
-
-
+// 5 zapytanie
+db.airport.aggregate(
+    [{
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Org_airport_lat: "$Org_airport_lat",
+                    Org_airport_long: "$Org_airport_long"
+                }
+            }
+        },
+        {
+            $out: "AllOrigin_airport"
+        }
+    ]
+)
+// 6 zapytanie
 db.airport.aggregate(
     [{
             $group: {
