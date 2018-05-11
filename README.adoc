@@ -25,11 +25,11 @@ Do realizacji projektu potrzebny był system operacyjny Linux, baza link:https:/
 Na początek został pobrany docker _Ubuntu_ za pomocą komendy `docker run ubuntu`, co automatycznie spowodowało pobranie najnowszej wersji Ubuntu 18.04. Niestety spowodowało to problem podczas instalacji pakietu R. Pobraliśmy więc Ubuntu ze wskazaniem wersji: `docker run ubuntu:16.04`. 
 
 Następnie bez problemu udało się zainstalować w naszym dockerze mongoDB oraz R. 
-Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które są opisane poniżej. 
+Stworzony link:https://hub.docker.com/r/nosqldaria/ubuntu16.04.mongo.r/[docker] zawiera w sobie wszystkie niezbędne programy oraz skrypty w bashu i R, które są opisane poniżej. 
 
 === Uruchomienie stworzonego dockera
 
-Do pobrania naszego dockera wystarczy wpisać `docker run -it -d nosqldaria/ubuntu:16.04`.
+Do pobrania naszego dockera wystarczy wpisać `docker run -it -d nosqldaria/ubuntu16.04.mongo.r`.
 Kolejnym krokiem jest sprawdzanie _containerID_ pobranego dockera za pomocą komendy `docker ps -a`. Następnie wystarczy jedynie wpisać `docker exec -it _containerID_ bash`, co spowoduje uruchomienie dockera. 
 
 == Tworzenie skryptów
