@@ -41,6 +41,10 @@ Do uruchomiania wszystkich zapytań został napisany link:https://github.com/my-
 
 Do tworzenia statystyk wymagane były zapytania, korzystające z link:https://docs.mongodb.com/manual/aggregation/#aggregation-pipeline[Aggregation Pipeline] i link:https://docs.mongodb.com/manual/aggregation/#map-reduce[Map-Reduce]. 
 
+Wszystkie wyniki zapytań zostały zapisane do plików z rozszerzeniem _json_. 
+
+Lista wysyłanych zapytań znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytaniaMongoDB.json[zapytaniaMongoDB.json]
+
 === Aggregation Pipeline
 
 Przykładowe zapytanie, wykorzystujące _Aggregation Pipeline_
@@ -102,9 +106,19 @@ db.Origin_airport_Flight.find().sort({
 }).limit(50)
 ----
 
-Wszystkie wyniki zapytań zostały zapisane do plików z rozszerzeniem _json_. 
+=== Czas działania
 
-Lista wysyłanych zapytań znajduje się w pliku link:https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/zapytaniaMongoDB.json[zapytaniaMongoDB.json]
+Do porównania dwóch metod został zmierzony czas działania dla zapytania 1
+
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/time1.png[Pipeline vs Map-reduce]
+{nbsp} +
+
+Dodatkowo został zmierzony czas działania metody _Pipeline_ z wykorzystaniem indeksowania oraz bez niego
+
+image::https://github.com/my-docker-nosql/ainc-kotki2team/blob/master/images/time2.png[Index vs No-index]
+{nbsp} +
+
+Wszystkie obliczenia zostały przeprowadzone dla całej bazy ( 3{nbsp}606{nbsp}803 rekordów) na komputerze wyposażonym w procesor Intel Core i3 3217U @ 1,8GHz x4, 4GB RAMu, dysk SSD, pod systemem Ubuntu 16.04
 
 == Wizualizacja wyników zapytań
 
@@ -116,7 +130,7 @@ Skrypt napisany w R znajduje się w pliku link:https://github.com/my-docker-nosq
 
 === Wyniki zapytań do bazy
 
-Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników, jendak bez problemu udało się pobrać wygenerowany plik z wynikami z dockera za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
+Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników, jendak bez problemu udało się pobrać z dockera wygenerowany plik z wynikami za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
 
 === Otrzymane wyniki
 
