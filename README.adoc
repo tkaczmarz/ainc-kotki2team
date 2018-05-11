@@ -130,7 +130,7 @@ Skrypt napisany w R znajduje się w pliku link:https://github.com/my-docker-nosq
 
 === Wyniki zapytań do bazy
 
-Po zakończeniu działania skryptu _bash_ otrzymaliśmy link:[plik] wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników, jendak bez problemu udało się pobrać z dockera wygenerowany plik z wynikami za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
+Po zakończeniu działania skryptu _bash_ otrzymaliśmy plik wyjściowy z wykresami oraz mapami. Ze względu na oszczędzanie pamięci, w dockerze nie zostały zainstalowane żadne programy do wyświwietlania otrzymanych wyników, jendak bez problemu udało się pobrać z dockera wygenerowany plik z wynikami za pomocą komendy `docker cp _containerID_:/nosql_projekt/Rplot.pdf`. 
 
 === Otrzymane wyniki
 
