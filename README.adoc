@@ -3,7 +3,7 @@
 == Baza
 W projekcie została użyta baza link:https://www.kaggle.com/flashgordon/usa-airport-dataset/version/2#[USA Airport Dataset] , zawierająca zestawienie lotów krajowych w USA, w latach 1990-2009. 
 {nbsp} +
-Baza składa się z 15 kolumn i 3606803 rekordów, jednak do testów została zmniejszona do 1000 rekordów.
+Baza składa się z 15 kolumn i 3{nbsp}606{nbsp}803 rekordów, jednak do testów została zmniejszona do 1000 rekordów.
  
 [%autowidth.spread,cols='1,1,2,2,1,1,1,1,1,1,1,1,1,1,1', options='header']
 .Przykładowy rekord z bazy
@@ -11,6 +11,11 @@ Baza składa się z 15 kolumn i 3606803 rekordów, jednak do testów została zm
 |Origin_airport |Destination_airport	|Origin_city	|Destination_city	|Passengers	|Seats	|Flights	|Distance	|Fly_date	|Origin_population	|Destination_population	|Org_airport_lat	|Org_airport_long	|Dest_airport_lat	|Dest_airport_long
 |EUG	|RDM	|Eugene OR|	Bend OR	|41	|396	|22	|103	|1990-11-01	|284093	|76034	|44.1245994567871	|-123.21199798584	|44.2541008|-121.1500015
 |===
+
+=== Czyszczenie bazy danych
+Pobrana baza oryginalnie była zapisana w formacie _csv_. Przed użyciem jej w mongoDB konieczne było upewnienie się, że wszystkie dane są zupełne i mają poprawny typ. Do tego celu została wykorzystana biblioteka link:https://github.com/tidyverse/purrr[purrr] dla języka link:https://www.r-project.org[R]. Z jej pomocą zostały usunięte wszystkie rekordy, które nie zawierały wszystkich informacji (posiadały puste pola) oraz te, które zawierały pola, których typ nie był poprawny z kolumną, np. wartości NA (_Not Available_), data w złym formacie lub ciągi znaków w polach liczbowych.
+
+W procesie czyszczenia bazy zostało usuniętych 12{nbsp}351 niepoprawnych rekordów (0.34%), tym samym baza zmalała do 3{nbsp}594{nbsp}452 rekordów.
 
 == Tworzenie środowiska deweloperskiego na potrzeby projektu
 Do stworzenia projektu użyliśmy link:https://www.docker.com[Dockera], który pozwala zbudować środowisko deweloperskie bez wirtualizacji i przy odrobinie szczęścia bez większego wysiłku związanego z instalacją oprogramowania. _Docker_ pozwala wykorzystywać gotowe obrazy zainstalowanych systemów, aplikacji i baz danych, które zostały wcześniej przygotowane i umieszczone w publicznym link:https://hub.docker.com[rejestrze].
