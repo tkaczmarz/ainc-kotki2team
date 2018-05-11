@@ -3,49 +3,32 @@
 #mongoimport --db Airport_db --collection airport --type csv --headerline --file airport.csv
 
 #1 zapytanie
-(mongo < zapytanie1.json) > wynik.json
-tail -n +5 wynik.json | egrep -v "^>|^bye" > wynik1.csv
-cat wynik1.csv | tr -d '{},:' > wynik1plot.csv
-rm wynik1.csv
+mongo < zapytanie1.json
+mongoexport --db Airport_db --collection Origin_airport_sumPassengers --type=csv --sort '{sumPassengers: -1}' --limit 50 --out wynik1plot.csv -f _id,sumPassengers
 
 #2 zapytanie
-(mongo < zapytanie2.json) > wynik.json
-tail -n +16 wynik.json | egrep -v "^>|^bye" > wynik2.csv
-cat wynik2.csv | tr -d '{},:' > wynik2plot.csv
-rm wynik2.csv
+mongo < zapytanie2.json
+mongoexport --db Airport_db --collection Origin_airport_Flight --sort '{value: -1}' --limit 50 --type=csv --out wynik2plot.csv -f _id,value
 
 #3 zapytanie 
-(mongo < zapytanie3.json) > wynik.json
-tail -n +5 wynik.json | egrep -v "^>|^bye" > wynik3.csv
-cat wynik3.csv | tr -d '{},:' > wynik3plot.csv
-rm wynik3.csv
+mongo < zapytanie3.json
+mongoexport --db Airport_db --collection ATL_Year_sumPassengers --type=csv --out wynik3plot.csv -f _id.Year,sumPassengers
+mongo < zapytanie3a.json
 
 #4 zapytanie 
-(mongo < zapytanie4.json) > wynik.json
-tail -n +5 wynik.json | egrep -v "^>|^bye" > wynik4.csv
-cat wynik4.csv | tr -d '{},:' > wynik4plot.csv
-rm wynik4.csv
+mongo < zapytanie4.json
+mongoexport --db Airport_db --collection ATL_Year_sumFlights --type=csv --out wynik4plot.csv -f _id.Year,sumFlights
 
 #5 zapytanie
-(mongo < zapytanie5.json) > wynik.json
-tail -n +6 wynik.json | egrep -v "^>|^bye" > wynik5.csv
-cat wynik5.csv | tr -d '{},:' > wynik5map.csv
-rm wynik5.csv
+mongo < zapytanie5.json
+mongoexport --db Airport_db --collection AllOrigin_airport --type=csv --out wynik5plot.csv -f _id.Origin_airport,_id.Org_airport_lat,_id.Org_airport_long
 
 #6 zapytanie
-(mongo < zapytanie6.json) > wynik.json
-tail -n +5 wynik.json | egrep -v "^>|^bye" > wynik6.csv
-cat wynik6.csv | tr -d '{},:' > wynik6map.csv
+mongo < zapytanie6.json
+mongoexport --db Airport_db --collection AllFlights --type=csv --out wynik6plot.csv -f _id.Origin_airport,_id.Destination_airport,_id.Org_airport_lat,_id.Org_airport_long,_id.Dest_airport_lat,_id.Dest_airport_long,sumFlights
 
-rm wynik6.csv
+#pobieranie czasow
+mongoexport --db Airport_db --collection time --type=csv --out wynikTime.csv -f number
+
 
 Rscript zapytania.R
-
-rm wynik1plot.csv
-rm wynik2plot.csv
-rm wynik3plot.csv
-rm wynik4plot.csv
-rm wynik5map.csv
-rm wynik6map.csv
-rm wynik.json
-#rm Rplots.pdf
