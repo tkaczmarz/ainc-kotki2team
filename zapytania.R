@@ -9,7 +9,7 @@ plik =  'wynik1plot.csv'
 podtytul = 'by the sum of passengers'
 
 # read data
-data = data.frame(read.table(plik))[c(2,4)]
+data = data.frame(read.csv(plik))[c(1,2)]
 limit = nrow(data)
 tytul = sprintf('Top %i most popular airports', limit)
 
@@ -30,14 +30,14 @@ ggplot(data=data, aes(x=ID, y=Sum)) +
         plot.subtitle = element_text(size=15)) +
   scale_y_continuous(expand = c(0,0)) + 
   ggtitle(tytul, subtitle = podtytul)
-dev.off()
+#dev.off()
 ## ZAPYTANIE 2
 ## 50 najbardziej popularnych lotnisk - wg. liczby lotów
 plik =  'wynik2plot.csv'
 podtytul = 'by the sum of flights'
 
 # read data
-data = data.frame(read.table(plik))[c(2,4)]
+data = data.frame(read.csv(plik))[c(1,2)]
 limit = nrow(data)
 tytul = sprintf('Top %i most popular airports', limit)
 
@@ -58,7 +58,7 @@ ggplot(data=data, aes(x=ID, y=Sum)) +
         plot.subtitle = element_text(size=15)) +
   scale_y_continuous(expand = c(0,0)) + 
   ggtitle(tytul, subtitle = podtytul)
-dev.off()
+#dev.off()
 
 ## ZAPYTANIE 3
 ## Liczba pasażerów z lotniska Atlanta wg. lat
@@ -67,7 +67,7 @@ tytul = 'Number of passengers by years'
 podtytul = 'from Atlanta airport'
 
 # read data
-data = data.frame(read.table(plik))[c(5,7)]
+data = data.frame(read.csv(plik))[c(1,2)]
 
 # rename columns
 colnames(data) = c('ID', 'Sum')
@@ -91,7 +91,7 @@ ggplot(data=data, aes(x=ID, y=Sum)) +
   scale_y_continuous(expand = c(0,0)) + 
   ggtitle(tytul, subtitle = podtytul)
 
-dev.off()
+#dev.off()
 
 ## ZAPYTANIE 4
 ## Liczba lotów z lotniska Atlanta wg. lat
@@ -101,7 +101,7 @@ tytul = 'Number of flights by years'
 podtytul = 'from Atlanta airport'
 
 # read data
-data = data.frame(read.table(plik))[c(5,7)]
+data = data.frame(read.csv(plik))[c(1,2)]
 
 # rename columns
 colnames(data) = c('ID', 'Sum')
@@ -124,16 +124,16 @@ ggplot(data=data, aes(x=ID, y=Sum)) +
     plot.subtitle = element_text(size=15)) +
   scale_y_continuous(expand = c(0,0)) + 
   ggtitle(tytul, subtitle = podtytul)
-dev.off()
+#dev.off()
 
 ## ZAPYTANIE 5
 ## Amerykańskie lotniska na mapie
 
-plik =  'wynik5map.csv'
+plik =  'wynik5plot.csv'
 tytul = 'American airports on the map'
 
 # read data
-data = data.frame(read.table(plik))[c(3,5,7)]
+data = data.frame(read.csv(plik))[c(1,2,3)]
 
 # rename columns
 colnames(data) = c('ID', 'lat', 'lon')
@@ -157,17 +157,17 @@ ggplot() +
         plot.title = element_text(size=22)) +
   coord_cartesian(xlim = c(-160, -50), ylim = c(20, 70)) +
   ggtitle(tytul)
-dev.off()
+#dev.off()
 
 ## ZAPYTANIE 6
 ## Najbardziej popularne loty
-plik =  'wynik6map.csv'
+plik =  'wynik6plot.csv'
 limit = 20
 tytul = sprintf('Top %i most popular routes', limit)
 podtytul = 'by the number of flights in both directions'
 
 # read data
-data = data.frame(read.table(plik))[c(3, 5, 7, 9, 11, 13, 15)]
+data = data.frame(read.csv(plik))[c(1, 2, 3, 4, 5, 6, 7)]
 
 # rename columns
 colnames(data) = c('from_ID', 'to_ID', 'from_lat', 'from_lon', 'to_lat', 'to_lon', 'Sum')
@@ -225,7 +225,7 @@ data = data[order(data$Sum, decreasing = T),]
 
 # limit data
 data_all =
-data = data[1:limit,]
+  data = data[1:limit,]
 
 # map of the world
 map_all = map_data("world")
@@ -248,4 +248,4 @@ ggplot() +
         plot.subtitle = element_text(size=15)) +
   coord_cartesian(xlim = c(-160, -50), ylim = c(20, 70)) +
   ggtitle(tytul, subtitle = podtytul)
-dev.off()
+#dev.off()
