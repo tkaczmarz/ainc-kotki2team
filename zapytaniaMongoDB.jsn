@@ -1,5 +1,6 @@
 use Airport_db
-DBQuery.shellBatchSize = 500
+db.time.drop()
+var before = new Date()
 db.airport.aggregate([{
         $group: {
             _id: "$Origin_airport",
@@ -8,17 +9,14 @@ db.airport.aggregate([{
             }
         }
     },
-    {
-        $sort: {
-            sumPassengers: -1
-        }
-    },
-    {
-        $limit: 50
-    }
-])
+    
+	{ $out : "Origin_airport_sumPassengers"}
+]);
+var after = new Date()
+execution_mills1 = after - before 
+db.time.save({"number":execution_mills1});
 
-
+var before = new Date()
 var mapFunction1 = function() {
     emit(this.Origin_airport, this.Flights);
 };
@@ -31,12 +29,12 @@ db.airport.mapReduce(
         out: "Origin_airport_Flight"
     }
 );
+var after = new Date()
+execution_mills2 = after - before 
+db.time.save({"number":execution_mills2});
 
-db.Origin_airport_Flight.find().sort({
-    value: -1
-}).limit(50)
 
-
+var before = new Date()
 db.airport.aggregate(
     [{
             $match: {
@@ -63,9 +61,50 @@ db.airport.aggregate(
         },
         {
             $limit: 50
-        }
+        },
+{$out: "ATL_Year_sumPassengers"}
     ]
 )
+var after = new Date()
+execution_mills3 = after - before 
+db.time.save({"number":execution_mills3});
+
+db.airport.createIndex( { "Origin_airport": 1 })
+var before = new Date()
+db.airport.aggregate(
+    [{
+            $match: {
+                Origin_airport: "ATL"
+            }
+        },
+        {
+            $group: {
+                _id: {
+                    Origin_airport: "$Origin_airport",
+                    Year: {
+                        $substr: ["$Fly_date", 0, 4]
+                    }
+                },
+                sumPassengers: {
+                    $sum: "$Passengers"
+                }
+            }
+        },
+        {
+            $sort: {
+                sumPassengers: -1
+            }
+        },
+        {
+            $limit: 50
+        },
+{$out: "ATL_Year_sumPassengers3a"}
+    ]
+)
+var after = new Date()
+execution_mills31 = after - before 
+db.time.save({"number":execution_mills31});
+db.airport.dropIndex( { "Origin_airport": 1 })
 
 
 db.airport.aggregate(
@@ -94,23 +133,10 @@ db.airport.aggregate(
         },
         {
             $limit: 50
-        }
+        },
+{$out: "ATL_Year_sumFlights"}
     ]
 )
-
-
-db.airport.aggregate(
-    [{
-        $group: {
-            _id: {
-                Origin_airport: "$Origin_airport",
-                Org_airport_lat: "$Org_airport_lat",
-                Org_airport_long: "$Org_airport_long"
-            },
-        }
-    }]
-)
-
 
 db.airport.aggregate(
     [{
@@ -132,6 +158,7 @@ db.airport.aggregate(
             $sort: {
                 sumFlights: -1
             }
-        }
+        },
+{ $out: "AllFlights"}
     ]
 )
