@@ -9,12 +9,18 @@ db.airport.aggregate([{
             }
         }
     },
-    
-	{ $out : "Origin_airport_sumPassengers"}
+
+    {
+        $out: "Origin_airport_sumPassengers"
+    }
 ]);
+
+
 var after = new Date()
-execution_mills1 = after - before 
-db.time.save({"number":execution_mills1});
+execution_mills1 = after - before
+db.time.save({
+    "number": execution_mills1
+});
 
 var before = new Date()
 var mapFunction1 = function() {
@@ -30,8 +36,11 @@ db.airport.mapReduce(
     }
 );
 var after = new Date()
-execution_mills2 = after - before 
-db.time.save({"number":execution_mills2});
+execution_mills2 = after - before
+db.time.save({
+    "number": execution_mills2
+});
+
 
 
 var before = new Date()
@@ -62,14 +71,23 @@ db.airport.aggregate(
         {
             $limit: 50
         },
-{$out: "ATL_Year_sumPassengers"}
+        {
+            $out: "ATL_Year_sumPassengers"
+        }
     ]
 )
-var after = new Date()
-execution_mills3 = after - before 
-db.time.save({"number":execution_mills3});
 
-db.airport.createIndex( { "Origin_airport": 1 })
+
+
+var after = new Date()
+execution_mills3 = after - before
+db.time.save({
+    "number": execution_mills3
+});
+
+db.airport.createIndex({
+    "Origin_airport": 1
+})
 var before = new Date()
 db.airport.aggregate(
     [{
@@ -98,13 +116,19 @@ db.airport.aggregate(
         {
             $limit: 50
         },
-{$out: "ATL_Year_sumPassengers3a"}
+        {
+            $out: "ATL_Year_sumPassengers3a"
+        }
     ]
 )
 var after = new Date()
-execution_mills31 = after - before 
-db.time.save({"number":execution_mills31});
-db.airport.dropIndex( { "Origin_airport": 1 })
+execution_mills31 = after - before
+db.time.save({
+    "number": execution_mills31
+});
+db.airport.dropIndex({
+    "Origin_airport": 1
+})
 
 
 db.airport.aggregate(
@@ -134,9 +158,13 @@ db.airport.aggregate(
         {
             $limit: 50
         },
-{$out: "ATL_Year_sumFlights"}
+        {
+            $out: "ATL_Year_sumFlights"
+        }
     ]
 )
+
+
 
 db.airport.aggregate(
     [{
@@ -159,6 +187,8 @@ db.airport.aggregate(
                 sumFlights: -1
             }
         },
-{ $out: "AllFlights"}
+        {
+            $out: "AllFlights"
+        }
     ]
 )
